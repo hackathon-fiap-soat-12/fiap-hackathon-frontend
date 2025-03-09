@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+      "esbenp.prettier-vscode", // Prettier
+      "dbaeumer.vscode-eslint", // ESLint
+      "firsttris.vscode-jest-runner", // Jest Runner
+      "eamodio.gitlens" // GitLens
+    ]
+  }
