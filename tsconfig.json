@@ -4,9 +4,11 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "paths": {
-    "@/shared*": ["./src/shared/*"],
-    "@/modules*": ["./src/modules/*"],
-    "@/core*": ["./src/core/*"]
+  "compilerOptions": {
+    "paths": {
+      "@/shared*": ["./src/shared/*"],
+      "@/modules*": ["./src/modules/*"],
+      "@/core*": ["./src/core/*"]
+    }
   }
 }
