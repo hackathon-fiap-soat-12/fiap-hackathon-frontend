@@ -3,6 +3,9 @@
       "esbenp.prettier-vscode", // Prettier
       "dbaeumer.vscode-eslint", // ESLint
       "firsttris.vscode-jest-runner", // Jest Runner
-      "eamodio.gitlens" // GitLens
+      "eamodio.gitlens", // GitLens
+      "vivaxy.vscode-conventional-commits", // Conventional Commits
+      "streetsidesoftware.code-spell-checker", // Spell Checker para evitar erros de digitação no código e commits
+      "gruntfuggly.todo-tree" // Destaca TODOs e FIXMEs no código
     ]
   }
