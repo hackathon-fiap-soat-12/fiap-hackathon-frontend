@@ -50,7 +50,7 @@ jobs:
         run: npm install -g vercel
 
       - name: ☁️ Deploy para Vercel
-        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
 
       - name: ✅ Finalizado com Sucesso!
         run: echo "🚀 Deploy concluído com sucesso! 🎉"
