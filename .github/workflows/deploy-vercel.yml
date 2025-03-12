@@ -1,0 +1,56 @@
+name: Deploy React app VERCEL
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: "⚙️ Ambiente (dev, staging, prd)"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - staging
+          - prd
+
+jobs:
+  deploy:
+    name: Build e Deploy para VERCEL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 🏗️ Instalar Dependências
+        run: npm install
+
+      - name: 📦 Criar build do React baseado no ambiente
+        run: |
+          REACT_APP_ENV=${{ inputs.ENVIRONMENT }} npm run build:${{ inputs.ENVIRONMENT }}
+
+      - name: 📂 Verificar conteúdo do diretório antes do upload
+        run: ls -la
+
+      - name: 🔍 Verificar Diretório de Build (`dist/`)
+        run: |
+          if [ -d "dist" ]; then
+            echo "✅ Build encontrado na pasta 'dist/'!"
+          else
+            echo "❌ ERRO: Diretório 'dist/' não encontrado!"
+            exit 1
+          fi
+
+      - name: 🚀 Instalar a Vercel CLI
+        run: npm install -g vercel
+
+      - name: ☁️ Deploy para Vercel
+        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+
+      - name: ✅ Finalizado com Sucesso!
+        run: echo "🚀 Deploy concluído com sucesso! 🎉"
