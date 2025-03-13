@@ -1,15 +1,16 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(({ mode }) => {
   return {
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     define: {
       __APP_ENV__: JSON.stringify(mode),
     },
     build: {
-      outDir: "dist",
-      sourcemap: mode !== "production",
+      outDir: 'dist',
+      sourcemap: mode !== 'production',
     },
   };
 });
