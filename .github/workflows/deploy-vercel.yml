@@ -56,10 +56,12 @@ jobs:
           echo "🔗 Deploy realizado! URL: $DEPLOY_URL"
 
       - name: Exibir a URL do Deploy
-        run: echo "🚀 A aplicação foi publicada em ${{ env.DEPLOY_URL }}"
+        run: |
+          echo "🚀 A aplicação foi publicada em ${{ env.DEPLOY_URL }}"
 
       - name: ✅ Finalizado com Sucesso!
-        run: echo "🚀 Deploy concluído com sucesso! 🎉"
+        run: |
+          echo "🚀 Deploy concluído com sucesso! 🎉"
 
       - name: Atualizar Descrição do Repositório no GitHub
         run: |
