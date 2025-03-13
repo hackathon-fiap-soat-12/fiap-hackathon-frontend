@@ -55,6 +55,12 @@ jobs:
           echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
           echo "🔗 Deploy realizado! URL: $DEPLOY_URL"
 
+      - name: Exibir a URL do Deploy
+        run: echo "🚀 A aplicação foi publicada em ${{ env.DEPLOY_URL }}"
+
+      - name: ✅ Finalizado com Sucesso!
+        run: echo "🚀 Deploy concluído com sucesso! 🎉"
+
       - name: Atualizar Descrição do Repositório no GitHub
         run: |
           REPO_NAME=${{ github.repository }}
@@ -63,6 +69,3 @@ jobs:
                -H "Accept: application/vnd.github.v3+json" \
                https://api.github.com/repos/$REPO_NAME \
                -d "{\"description\": \"🚀 Deploy disponível em: ${{ env.DEPLOY_URL }}\"}"
-
-      - name: ✅ Finalizado com Sucesso!
-        run: echo "🚀 Deploy concluído com sucesso! 🎉"
