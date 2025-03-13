@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       ENVIRONMENT:
-        description: "⚙️ Ambiente (dev, staging, prd)"
+        description: '⚙️ Ambiente (dev, staging, prd)'
         required: true
-        default: "dev"
+        default: 'dev'
         type: choice
         options:
           - dev
@@ -50,7 +50,10 @@ jobs:
         run: npm install -g vercel
 
       - name: ☁️ Deploy para Vercel
-        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
+        run: |
+          DEPLOY_URL=$(vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes)
+          echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
+          echo "🔗 Deploy realizado! URL: $DEPLOY_URL"
 
       - name: ✅ Finalizado com Sucesso!
         run: echo "🚀 Deploy concluído com sucesso! 🎉"
