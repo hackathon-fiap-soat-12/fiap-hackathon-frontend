@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(({ mode }) => {
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [tailwindcss(), react()],
     define: {
       __APP_ENV__: JSON.stringify(mode),
     },
