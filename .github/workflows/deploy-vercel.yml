@@ -55,9 +55,6 @@ jobs:
           echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
           echo "🔗 Deploy realizado! URL: $DEPLOY_URL"
 
-      - name: Exibir a URL do Deploy
-        run: echo "🚀 A aplicação foi publicada em: ${{ env.DEPLOY_URL }}"
-
       - name: Atualizar Descrição do Repositório no GitHub
         run: |
           REPO_NAME=${{ github.repository }}
