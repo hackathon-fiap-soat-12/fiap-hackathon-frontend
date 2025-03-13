@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/corecomponents/ui/button';
 import './App.css';
 
 function App() {
