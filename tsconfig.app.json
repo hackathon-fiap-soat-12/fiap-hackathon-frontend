@@ -2,10 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/shared*": ["./src/shared/*"],
-      "@/modules*": ["./src/modules/*"],
-      "@/core*": ["./src/core/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/modules/*": ["./src/modules/*"],
+      "@/core/*": ["./src/core/*"],
+      "@/app/*": ["./src/app/*"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
