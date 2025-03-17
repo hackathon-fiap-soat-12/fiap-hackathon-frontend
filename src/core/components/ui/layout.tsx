@@ -8,9 +8,7 @@ export function Layout() {
         <ModeToggle />
       </div>
       <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center">
-        <div className="flex flex-col items-center justify-center min-h-svh">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </>
   );
