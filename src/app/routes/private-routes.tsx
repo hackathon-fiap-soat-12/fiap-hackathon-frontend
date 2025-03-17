@@ -1,5 +1,5 @@
 import { useAuth } from '@/core/hooks/use-auth.hook';
-import { Navigate, Outlet, Routes, Route } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 export default function PrivateRoutes() {
   const { user } = useAuth();
@@ -7,7 +7,7 @@ export default function PrivateRoutes() {
   return user ? (
     <Routes>
       <Route path="/" element={<Outlet />}>
-        <Route path="/dashboard" element={<></>} />
+        <Route path="/home" element={<>Hellow</>} />
       </Route>
     </Routes>
   ) : (

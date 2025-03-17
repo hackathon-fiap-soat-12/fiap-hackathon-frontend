@@ -1,8 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
-import PublicRoutes from './public-routes';
-import PrivateRoutes from './private-routes';
-import Error404 from '@/modules/errors/error-404/error-404';
 import { Layout } from '@/core/components/ui/layout';
+import { Error404 } from '@/modules/errors/error-404/error-404';
+import { Route, Routes } from 'react-router-dom';
+import PrivateRoutes from './private-routes';
+import PublicRoutes from './public-routes';
 
 export default function AppRouter() {
   return (
@@ -10,8 +10,8 @@ export default function AppRouter() {
       <Route element={<Layout />}>
         <Route path="/*" element={<PublicRoutes />} />
         <Route path="/admin/*" element={<PrivateRoutes />} />
+        <Route path="*" element={<Error404 />} />
       </Route>
-      <Route path="*" element={<Error404 />} /> {/* Rota 404 */}
     </Routes>
   );
 }

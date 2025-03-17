@@ -1,5 +1,6 @@
 import { useAuth } from '@/core/hooks/use-auth.hook';
 import { useNavigate } from 'react-router-dom';
+import { LoginForm } from './sign-in-form/sign-in-form';
 
 export function SignIn() {
   const { login } = useAuth();
@@ -11,14 +12,8 @@ export function SignIn() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground">
-      <h1 className="text-2xl font-bold">Login</h1>
-      <button
-        onClick={handleLogin}
-        className="bg-primary text-white px-4 py-2 rounded"
-      >
-        Entrar
-      </button>
+    <div className="w-full max-w-sm md:max-w-3xl">
+      <LoginForm />
     </div>
   );
 }
