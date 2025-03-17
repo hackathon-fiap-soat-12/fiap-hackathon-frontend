@@ -14,15 +14,16 @@ import { cn } from '@/core/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import * as z from 'zod';
 
 // Esquema de validação com Zod
-const loginSchema = z.object({
+const signInSchema = z.object({
   email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
 });
 
-export type LoginFormData = z.infer<typeof loginSchema>;
+export type SignInFormData = z.infer<typeof signInSchema>;
 
 export function SignInForm({
   className,
@@ -30,8 +31,8 @@ export function SignInForm({
 }: React.ComponentProps<'div'>) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
   });
 
   function onSubmit(data: any) {
@@ -123,9 +124,9 @@ export function SignInForm({
                 </Button>
                 <div className="text-center text-sm">
                   Ainda não tem uma conta?{' '}
-                  <a href="#" className="underline underline-offset-4">
+                  <Link to="/signup" className="underline underline-offset-4">
                     Cadastre-se
-                  </a>
+                  </Link>
                 </div>
               </div>
             </form>

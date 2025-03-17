@@ -1,5 +1,9 @@
+import { SignUpForm } from './sign-up-form/sign-up-form';
+
 export function SignUp() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground"></div>
+    <div className="w-full max-w-sm md:max-w-3xl">
+      <SignUpForm />
+    </div>
   );
 }
