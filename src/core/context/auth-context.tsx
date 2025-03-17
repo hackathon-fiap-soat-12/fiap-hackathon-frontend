@@ -25,7 +25,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children} hellow
+      {children}
     </AuthContext.Provider>
   );
 }
