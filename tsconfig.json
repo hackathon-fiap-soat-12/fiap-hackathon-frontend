@@ -11,7 +11,8 @@
       "@/modules/*": ["./src/modules/*"],
       "@/core/*": ["./src/core/*"],
       "@/app/*": ["./src/app/*"],
-      "@/assets/*": ["./src/assets/*"]
+      "@/assets/*": ["./src/assets/*"],
+      "@/i18n/*": ["./src/infra/i18n/*"]
     }
   }
 }

@@ -8,6 +8,7 @@ export default function PrivateRoutes() {
     <Routes>
       <Route path="/" element={<Outlet />}>
         <Route path="/home" element={<>Hellow</>} />
+        <Route path="/dashboard" element={<>Hellow</>} />
       </Route>
     </Routes>
   ) : (
