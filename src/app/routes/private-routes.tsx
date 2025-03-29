@@ -1,17 +1,24 @@
-import { useAuth } from '@/core/hooks/use-auth.hook';
+import { useAuth } from '@/core/context/auth-context';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 export default function PrivateRoutes() {
-  const { user } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
-  return user ? (
+  if (loading) {
+    return <></>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" replace />;
+  }
+
+  return (
     <Routes>
-      <Route path="/" element={<Outlet />}>
+      <Route element={<Outlet />}>
         <Route path="/home" element={<>Hellow</>} />
         <Route path="/dashboard" element={<>Hellow</>} />
+        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
       </Route>
     </Routes>
-  ) : (
-    <Navigate to="/signin" replace />
   );
 }

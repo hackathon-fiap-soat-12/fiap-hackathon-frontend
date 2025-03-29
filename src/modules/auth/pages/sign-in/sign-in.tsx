@@ -1,4 +1,4 @@
-import { useAuth } from '@/core/hooks/use-auth.hook';
+import { useAuth } from '@/core/context/auth-context';
 import { useNavigate } from 'react-router-dom';
 import { SignInForm } from './sign-in-form/sign-in-form';
 
@@ -7,7 +7,7 @@ export function SignIn() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    login({ name: 'Usuário' });
+    login({ name: 'Usuário', email: 'Abcd' });
     navigate('/app/dashboard');
   };
 

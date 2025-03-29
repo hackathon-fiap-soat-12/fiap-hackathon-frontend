@@ -1,5 +1,5 @@
 import { Button } from '@/core/components/ui/button';
-import { useAuth } from '@/core/hooks/use-auth.hook';
+import { useAuth } from '@/core/context/auth-context';
 
 export function Home() {
   const { logout } = useAuth();
