@@ -3,7 +3,7 @@ name: Deploy React app VERCEL
 on:
   workflow_dispatch:
     inputs:
-      ENVIRONMENT:
+      ENV:
         description: '⚙️ Ambiente (dev, staging, prd)'
         required: true
         default: 'dev'
@@ -12,6 +12,18 @@ on:
           - dev
           - staging
           - prd
+
+      VITE_COGNITO_USER_POOL_ID:
+        description: '⚙️ Cognito - User pool id'
+        required: true
+        default: ''
+        type: string
+
+      VITE_COGNITO_CLIENT_ID:
+        description: '⚙️ Cognito - Client id'
+        required: true
+        default: ''
+        type: string
 
 jobs:
   deploy:
@@ -30,9 +42,18 @@ jobs:
       - name: 🏗️ Instalar Dependências
         run: npm install
 
+      - name: 🔁 Preencher variaveis de ambiente
+        run: |
+          echo "VITE_COGNITO_USER_POOL_ID=${{ inputs.VITE_COGNITO_USER_POOL_ID }}" >> .env
+          echo "VITE_COGNITO_CLIENT_ID=${{ inputs.VITE_COGNITO_CLIENT_ID }}" >> .env
+
+      - name: 🔍 Verificar conteúdo do .env
+        run: cat .env
+
       - name: 📦 Criar build do React baseado no ambiente
         run: |
-          REACT_APP_ENV=${{ inputs.ENVIRONMENT }} npm run build:${{ inputs.ENVIRONMENT }}
+          REACT_APP_ENV=${{ inputs.ENV }} \
+          npm run build:${{ inputs.ENV }}
 
       - name: 📂 Verificar conteúdo do diretório antes do upload
         run: ls -la
