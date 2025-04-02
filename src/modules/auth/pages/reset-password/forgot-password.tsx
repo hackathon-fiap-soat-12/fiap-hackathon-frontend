@@ -10,9 +10,9 @@ import {
 } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
+import { useAuth } from '@/core/context/auth-context';
 import { cn } from '@/core/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
@@ -28,13 +28,13 @@ export function ForgotPassword({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const [isLoading, setIsLoading] = useState(false);
+  const { loading } = useAuth();
 
   const form = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  function onSubmit(data: any) {
+  function onSubmit(data: unknown) {
     console.log('Login data:', data);
   }
 
@@ -66,7 +66,7 @@ export function ForgotPassword({
                               {...field}
                               id="email"
                               type="email"
-                              disabled={isLoading}
+                              disabled={loading}
                               placeholder="seuemail@exemplo.com"
                               className={cn(
                                 'transition-colors',
