@@ -47,8 +47,8 @@ jobs:
           echo "VITE_COGNITO_USER_POOL_ID=${{ inputs.VITE_COGNITO_USER_POOL_ID }}" >> .env.production
           echo "VITE_COGNITO_CLIENT_ID=${{ inputs.VITE_COGNITO_CLIENT_ID }}" >> .env.production
 
-      - name: 🔍 Verificar conteúdo do .env
-        run: cat .env
+      - name: 🔍 Verificar conteúdo do .env.production
+        run: cat .env.production
 
       - name: 📦 Criar build do React baseado no ambiente
         run: |
