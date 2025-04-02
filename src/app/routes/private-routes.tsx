@@ -1,4 +1,6 @@
 import { useAuth } from '@/core/context/auth-context';
+import { Dashboard } from '@/modules/admin/pages/dashboard/dashboard';
+import { Home } from '@/modules/admin/pages/home/home';
 import { Error404 } from '@/modules/errors/error-404/error-404';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
@@ -16,8 +18,8 @@ export default function PrivateRoutes() {
   return (
     <Routes>
       <Route element={<Outlet />}>
-        <Route path="/home" element={<>Hellow</>} />
-        <Route path="/dashboard" element={<>Hellow</>} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<Error404 />} />
       </Route>
     </Routes>
