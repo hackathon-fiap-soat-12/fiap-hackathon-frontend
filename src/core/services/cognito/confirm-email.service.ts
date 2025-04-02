@@ -63,6 +63,6 @@ export class ConfirmEmailService {
       },
     };
 
-    return errorMap[error.code || ''] || defaultError;
+    return errorMap[error.name || ''] || defaultError;
   }
 }

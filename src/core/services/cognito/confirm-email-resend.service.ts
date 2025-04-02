@@ -1,7 +1,7 @@
 import { resendSignUpCode, ResendSignUpCodeInput } from '@aws-amplify/auth';
 import {
   AuthError,
-  AuthServiceError,
+  CognitoConfirmResendError,
   ResendConfirmationCodeParams,
 } from './types/auth';
 
@@ -20,7 +20,7 @@ export class ConfirmEmailResendService {
     }
   }
 
-  private static mapAuthError(error: AuthServiceError): AuthError {
+  private static mapAuthError(error: CognitoConfirmResendError): AuthError {
     const defaultError: AuthError = {
       code: 'UnexpectedError',
       message: 'Erro inesperado',
@@ -43,6 +43,6 @@ export class ConfirmEmailResendService {
       },
     };
 
-    return errorMap[error.code || ''] || defaultError;
+    return errorMap[error.name || ''] || defaultError;
   }
 }

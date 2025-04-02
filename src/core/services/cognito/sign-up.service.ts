@@ -1,5 +1,5 @@
 import { signUp, SignUpInput } from 'aws-amplify/auth';
-import { AuthError, AuthServiceError, SignUpParams } from './types/auth';
+import { AuthError, CognitoSignUpError, SignUpParams } from './types/auth';
 
 export class SignUpService {
   static async signUp(
@@ -22,26 +22,21 @@ export class SignUpService {
         },
       };
 
-      try {
-        const { userId, isSignUpComplete } = await signUp(signUpInput);
+      const { userId, isSignUpComplete } = await signUp(signUpInput);
 
-        if (!userId) {
-          throw new Error('Cadastro realizado, mas userId não foi retornado');
-        }
-
-        return { userId, isSignUpComplete };
-      } catch (error) {
-        throw this.handleSignUpError(error);
+      if (!userId) {
+        throw new Error('Cadastro realizado, mas userId não foi retornado');
       }
+
+      return { userId, isSignUpComplete };
     } catch (error) {
-      const authError = error as AuthServiceError;
+      const authError = error as CognitoSignUpError;
       console.error('[AuthService] SignUp error:', authError);
       throw this.mapError(authError);
     }
   }
 
-  // Tratamento específico para erros de cadastro
-  private static handleSignUpError(error: AuthServiceError): AuthError {
+  private static mapError(error: CognitoSignUpError): AuthError {
     const defaultError: AuthError = {
       code: 'UnexpectedError',
       message: 'Erro inesperado no cadastro',
@@ -68,7 +63,7 @@ export class SignUpService {
       },
     };
 
-    return errorMapping[error.code] || defaultError;
+    return errorMapping[error.name] || defaultError;
   }
 
   private static getInvalidParameterDetails(message: string): string {
@@ -79,19 +74,5 @@ export class SignUpService {
       return 'Formato de e-mail inválido';
     }
     return message;
-  }
-
-  private static mapError(error: AuthServiceError): AuthServiceError {
-    const errorMap: Record<string, string> = {
-      UsernameExistsException: 'Este usuário já está cadastrado',
-      InvalidPasswordException: 'A senha não atende aos requisitos mínimos',
-      CodeMismatchException: 'Código de verificação inválido',
-      ExpiredCodeException: 'Código expirado. Solicite um novo.',
-    };
-
-    return {
-      ...error,
-      message: errorMap[error.code] || error.message,
-    };
   }
 }

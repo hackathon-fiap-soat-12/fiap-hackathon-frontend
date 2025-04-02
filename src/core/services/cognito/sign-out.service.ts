@@ -26,7 +26,7 @@ export class SignOutService {
 
   private static mapError(error: unknown): AuthError {
     return {
-      name: 'SignOutFailed',
+      code: 'SignOutFailed',
       message: 'Erro ao encerrar sessão. Tente novamente.',
       details: error instanceof Error ? error.message : String(error),
     };
