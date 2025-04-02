@@ -37,8 +37,15 @@ export type CognitoSignInError = {
   name: SignInErrorCode;
 } & CognitoError;
 
+export type CognitoConfirmResendError = {
+  name: ConfirmResendErrorCode;
+} & CognitoError;
+
+export type CognitoSignUpError = {
+  name: SignUpErrorCode;
+} & CognitoError;
+
 export type AuthError = {
-  name: string;
   code: string;
   message: string;
   details?: string;
@@ -79,6 +86,16 @@ export type SignInErrorCode =
   | 'UnexpectedError'
   | 'UserAlreadyAuthenticatedException'
   | 'TooManyFailedAttemptsException';
+
+export type ConfirmResendErrorCode =
+  | 'CodeMismatchException'
+  | 'ExpiredCodeException'
+  | 'UserNotFoundException';
+
+export type SignUpErrorCode =
+  | 'UsernameExistsException'
+  | 'InvalidParameterException'
+  | 'InvalidPasswordException';
 
 export interface AuthError {
   code: AuthErrorCode;
