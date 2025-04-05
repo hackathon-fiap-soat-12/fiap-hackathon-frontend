@@ -19,8 +19,7 @@ export default function PublicRoutes() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/confirm" element={<ConfirmEmail />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      {/* <Route path="/dashboard" element={<Dashboard />} />{' '} */}
-      {/* Adicione esta linha */}
+
       <Route path="/confirm-email" element={<ConfirmEmail />} />
       <Route path="/confirm-email-resend" element={<ConfirmEmailResend />} />
 

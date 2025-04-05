@@ -78,28 +78,30 @@ export function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen w-full bg-background text-foreground">
-      <div className="w-full max-w-5xl p-4">
-        <h1 className="text-2xl font-bold mb-4">Histórico</h1>
-        <div className="rounded-lg shadow-md">
-          <div className="mb-4">
+    <div className="flex flex-col items-center min-h-screen w-full text-white">
+      <div className="w-full max-w-5xl p-6">
+        <h1 className="text-3xl font-extrabold mb-6 text-center">
+          Histórico de Processamento
+        </h1>
+        <div className="rounded-lg shadow-lg bg-gray-800 p-6">
+          <div className="mb-6">
             <input
               type="text"
-              placeholder="Filtrar por nome do vídeo..."
+              placeholder="🔍 Filtrar por nome do vídeo..."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-3 border border-gray-700 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <DataTable>
             <DataTableHeader
               columns={columns}
-              className="text-foreground font-semibold"
+              className="text-gray-300 font-semibold bg-gray-700"
             />
             <DataTableBody>
               {filteredVideos.length > 0 ? (
                 filteredVideos.map((video) => (
-                  <DataTableRow key={video.id}>
+                  <DataTableRow key={video.id} className="hover:bg-gray-700">
                     <DataTableCell className="w-full text-left">
                       {video.nome}
                     </DataTableCell>
@@ -120,10 +122,10 @@ export function Dashboard() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="rounded-full"
+                          className="rounded-full hover:bg-blue-500 hover:text-white transition"
                           onClick={() => handleDownload(video.id, video.nome)}
                         >
-                          <DownloadIcon />
+                          <DownloadIcon className="w-5 h-5" />
                         </Button>
                       </div>
                     </DataTableCell>
@@ -134,7 +136,7 @@ export function Dashboard() {
                   <DataTableCell colSpan={6} className="text-center py-8">
                     <div className="flex flex-col items-center justify-center">
                       <svg
-                        className="h-10 w-10 text-gray-400 mb-4"
+                        className="h-12 w-12 text-gray-500 mb-4"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -146,10 +148,10 @@ export function Dashboard() {
                           d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      <span className="text-base font-medium text-gray-500">
+                      <span className="text-lg font-medium text-gray-400">
                         Nenhum vídeo encontrado
                       </span>
-                      <span className="text-sm text-gray-400 mt-1">
+                      <span className="text-sm text-gray-500 mt-1">
                         {searchTerm
                           ? 'Tente ajustar os filtros de busca'
                           : 'Ainda não há vídeos processados disponíveis'}
