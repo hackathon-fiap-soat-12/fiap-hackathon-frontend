@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 
 const AppHeader = () => {
   return (
-    <header className="flex justify-start px-7 py-3 w-full sticky top-0 right-0 bg-gradient-to-r from-indigo-800 to-purple-800 z-[1]">
+    <header className="flex justify-start px-7 py-3 w-full sticky top-0 right-0 bg-[#171717] z-[1] before:absolute before:inset-0 before:h-[3px] before:bg-gradient-to-r before:from-indigo-800 before:to-purple-800 before:top-full">
       <div className="flex space-between items-center justify-between w-full">
         <div>
           <SideMenuTrigger className="cursor-pointer text-white hover:bg-white/10 p-2 rounded-md transition-colors" />

@@ -26,7 +26,7 @@ function BaseLayout() {
 
 const OutletContainer = memo(() => {
   return (
-    <main className="relative flex flex-1 flex-col items-center px-7 py-11">
+    <main className="relative flex flex-1 flex-col items-center px-7">
       <Outlet />
     </main>
   );
