@@ -1,59 +1,47 @@
-import { Avatar, AvatarFallback } from '@/core/components/ui/avatar';
-import { Button } from '@/core/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/core/components/ui/dropdown-menu';
 import { useAuth } from '@/core/context/auth-context';
-import { LogOut, Menu } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+// import { useNavigate } from 'react-router-dom';
+// import { toast } from 'sonner';
 
 export function Home() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { logout, user } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    toast.success('Logout realizado com sucesso!');
+  // const handleLogout = () => {
+  //   logout();
+  //   toast.success('Logout realizado com sucesso!');
 
-    setTimeout(() => {
-      navigate('/signin');
-    }, 1500);
-  };
+  //   setTimeout(() => {
+  //     navigate('/signin');
+  //   }, 1500);
+  // };
 
-  const getInitials = (name: string) => {
-    return name!
-      .split(' ')
-      .map((part) => part[0])
-      .slice(0, 2)
-      .join('')
-      .toUpperCase();
-  };
+  // const getInitials = (name: string) => {
+  //   const mockName = name || 'Usuário'; // Mocka o nome caso não esteja disponível
+  //   return mockName
+  //     .split(' ')
+  //     .map((part) => part[0])
+  //     .slice(0, 2)
+  //     .join('')
+  //     .toUpperCase();
+  // };
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
+      {/* <header className="border-b">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold">MeuApp</span>
-            </div>
-
-            {/* Desktop menu */}
+            Desktop menu
             <div className="hidden md:flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback>{getInitials(user!.name!)}</AvatarFallback>
+                  <AvatarFallback>
+                    {getInitials(user?.name || 'Usuário')}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">{user!.name}</span>
+                  <span className="text-sm font-medium">{user?.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {user!.email}
+                    {user?.email || 'Usuário'}
                   </span>
                 </div>
               </div>
@@ -75,15 +63,15 @@ export function Home() {
                     <div className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
                         <AvatarFallback>
-                          {getInitials(user!.name!)}
+                          {getInitials(user?.name!) || 'Usuário'}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
                         <span className="text-sm font-medium">
-                          {user!.name}
+                          {user?.name || 'Usuário'}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {user!.email}
+                          {user?.email || 'Usuário'}
                         </span>
                       </div>
                     </div>
@@ -98,11 +86,13 @@ export function Home() {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Bem-vindo, {user!.name}!</h1>
+          <h1 className="text-3xl font-bold mb-6">
+            Bem-vindo, {user?.name || 'Usuário'}!
+          </h1>
           <div className="bg-card rounded-lg border p-6">
             <h2 className="text-xl font-semibold mb-4">Painel Principal</h2>
             <p className="text-muted-foreground mb-4">

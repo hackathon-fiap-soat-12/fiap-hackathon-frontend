@@ -1,20 +1,20 @@
 import { ThemeProvider } from '@/core/components/theme-provider';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import './App.css';
-import AppRouter from './app/routes/router';
+import { AppRoutes } from './app/routes/router';
 import { AuthProvider } from './core/context/auth-context';
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <AuthProvider>
-          <AppRouter />
+          <AppRoutes />
         </AuthProvider>
         <Toaster />
       </ThemeProvider>
-    </BrowserRouter>
+    </Router>
   );
 }
 
