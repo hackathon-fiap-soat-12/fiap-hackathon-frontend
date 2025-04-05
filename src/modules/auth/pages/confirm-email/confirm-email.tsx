@@ -1,4 +1,3 @@
-import loginImage from '@/assets/images/login-page-wallpaper.png';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent } from '@/core/components/ui/card';
 import {
@@ -64,11 +63,14 @@ export function ConfirmEmail({
   };
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div
+      className={cn('flex flex-col gap-6 max-w-md mx-auto', className)}
+      {...props}
+    >
       <Card className="overflow-hidden">
-        <CardContent className="grid p-0 md:grid-cols-2">
+        <CardContent className="p-6 md:p-8">
           <Form {...form}>
-            <form className="p-6 md:p-8" onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Verificação de Email</h1>
@@ -156,13 +158,6 @@ export function ConfirmEmail({
               </div>
             </form>
           </Form>
-          <div className="relative hidden bg-muted md:block">
-            <img
-              src={loginImage || '/placeholder.svg'}
-              alt="Imagem de cadastro"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
-          </div>
         </CardContent>
       </Card>
     </div>
