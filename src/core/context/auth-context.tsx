@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { GetCurrentAuthUserService } from '../services/cognito/get-current-auth-user.service';
 import { SignInService } from '../services/cognito/sign-in.service';
 import { SignOutService } from '../services/cognito/sign-out.service';
@@ -26,7 +27,6 @@ interface AuthContextType {
   login: (userData: UserLogin) => void;
   logout: () => void;
   loading: boolean;
-  error: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -39,7 +39,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,8 +55,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         name: loggerUser.name,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Check session failed');
       setIsAuthenticated(false);
+      handleError(err?.message);
     } finally {
       setLoading(false);
     }
@@ -65,7 +64,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (loginData: UserLogin): Promise<void> => {
     setLoading(true);
-    setError(null);
     try {
       const loggerUser = await SignInService.signIn({
         username: loginData.email,
@@ -80,8 +78,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       navigate('/home');
     } catch (err) {
       setIsAuthenticated(false);
-      setError(err instanceof Error ? err.message : 'Login failed');
-      throw err;
+      handleError(err?.message);
     } finally {
       setLoading(false);
     }
@@ -89,11 +86,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = async (): Promise<void> => {
     setLoading(true);
-    await SignOutService.signOut();
-    setUser(null);
-    setIsAuthenticated(false);
-    navigate('/signin');
-    setLoading(false);
+    try {
+      await SignOutService.signOut();
+      setUser(null);
+      setIsAuthenticated(false);
+      navigate('/signin');
+    } catch (err) {
+      handleError(err?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleError = (message: string) => {
+    toast.error('Oops, algo deu errado', {
+      description: message,
+    });
   };
 
   return (
@@ -104,7 +112,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         login,
         logout,
         loading,
-        error,
       }}
     >
       {children}
