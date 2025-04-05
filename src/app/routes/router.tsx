@@ -2,7 +2,6 @@ import { useAuth } from '@/core/context/auth-context';
 import { AuthLayout } from '@/core/layouts/AuthLayout';
 import BaseLayout from '@/core/layouts/BaseLayout';
 import { Dashboard } from '@/modules/admin/pages/dashboard/dashboard';
-import { Home } from '@/modules/admin/pages/home/home';
 import { ConfirmEmailResend } from '@/modules/auth/pages/confirm-email-resend/confirm-email-resend';
 import { ConfirmEmail } from '@/modules/auth/pages/confirm-email/confirm-email';
 import { ForgotPassword } from '@/modules/auth/pages/reset-password/forgot-password';
@@ -23,7 +22,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isPrivate }) => {
   }
 
   if (!isPrivate && isAuthenticated) {
-    return <Navigate to="/admin/home" replace />;
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return <Outlet />;
@@ -53,7 +52,6 @@ const AppRoutes: React.FC = () => {
       </Route>
       {/* temporariamente */}
       <Route element={<BaseLayout />}>
-        <Route path="/admin/home" element={<Home />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
       </Route>
     </Routes>

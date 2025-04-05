@@ -75,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         name: loggerUser.name,
       });
       setIsAuthenticated(!!loggerUser);
-      navigate('/home');
+      navigate('/dashboard');
     } catch (err) {
       setIsAuthenticated(false);
       handleError(err?.message);

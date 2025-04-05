@@ -10,7 +10,7 @@ export default function PublicRoutes() {
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    return <Navigate to="/admin/home" replace />;
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return (
