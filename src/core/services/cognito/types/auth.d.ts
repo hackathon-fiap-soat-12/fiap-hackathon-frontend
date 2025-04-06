@@ -45,6 +45,10 @@ export type CognitoSignUpError = {
   name: SignUpErrorCode;
 } & CognitoError;
 
+export type CognitoForgotPasswordError = {
+  name: ForgotPasswordErrorCode;
+} & CognitoError;
+
 export type AuthError = {
   code: string;
   message: string;
@@ -96,6 +100,11 @@ export type SignUpErrorCode =
   | 'UsernameExistsException'
   | 'InvalidParameterException'
   | 'InvalidPasswordException';
+
+export type ForgotPasswordErrorCode =
+  | 'ForgotPasswordFailed'
+  | 'UserNotFoundException'
+  | 'InvalidUsername';
 
 export interface AuthError {
   code: AuthErrorCode;
