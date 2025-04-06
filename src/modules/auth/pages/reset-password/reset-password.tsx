@@ -11,15 +11,28 @@ import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
 import { useAuth } from '@/core/context/auth-context';
 import { cn } from '@/core/lib/utils';
+import { VerificationCodeInput } from '@/shared/components/verification-code/verification-code';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
 
+const passwordValidator = (val: string) => {
+  return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+    val
+  );
+};
+
 const resetPasswordSchema = z
   .object({
+    email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
     code: z.string().min(6, 'O código deve ter 6 caracteres'),
-    newPassword: z.string().min(8, 'A senha deve ter pelo menos 8 caracteres'),
+    newPassword: z
+      .string()
+      .min(8, 'Use 8+ caracteres com letras, números e símbolos')
+      .refine(passwordValidator, {
+        message: 'Use 8+ caracteres com letras, números e símbolos',
+      }),
     confirmPassword: z.string().min(8, 'Confirme sua senha'),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -33,11 +46,12 @@ export function ResetPassword({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const { loading } = useAuth();
+  const { loading, resetPassword } = useAuth();
 
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
+      email: '',
       code: '',
       newPassword: '',
       confirmPassword: '',
@@ -45,8 +59,11 @@ export function ResetPassword({
   });
 
   function onSubmit(data: ResetPasswordFormData) {
-    console.log('Reset password data:', data);
-    // Lógica para redefinir a senha
+    resetPassword({
+      email: data.email,
+      code: data.code,
+      newPassword: data.newPassword,
+    });
   }
 
   return (
@@ -62,7 +79,7 @@ export function ResetPassword({
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Redefinir senha</h1>
                   <p className="text-balance text-muted-foreground">
-                    Digite o código recebido e sua nova senha
+                    Utilize o código de verificação enviado para o seu e-mail
                   </p>
                 </div>
 
@@ -72,15 +89,37 @@ export function ResetPassword({
                   name="code"
                   render={({ field, fieldState }) => (
                     <FormItem>
-                      <Label htmlFor="code">Código de verificação</Label>
+                      <Label>Código de verificação</Label>
+                      <div className="relative pb-4">
+                        <FormControl>
+                          <VerificationCodeInput
+                            onChange={(value) => field.onChange(value)}
+                            onBlur={field.onBlur}
+                            error={!!fieldState.error}
+                            disabled={loading}
+                          />
+                        </FormControl>
+                        <FormMessage className="absolute bottom-0 left-0 text-[10px]" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Campo para o Confirmação de E-mail */}
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <Label htmlFor="email">Confirme seu E-mail</Label>
                       <div className="relative pb-4">
                         <FormControl>
                           <Input
                             {...field}
-                            id="code"
+                            id="email"
                             type="text"
                             disabled={loading}
-                            placeholder="Digite o código de 6 dígitos"
+                            placeholder="Digite o seu E-mail"
                             className={cn(
                               'transition-colors',
                               fieldState.error &&
@@ -153,13 +192,6 @@ export function ResetPassword({
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? 'Redefinindo...' : 'Redefinir senha'}
                 </Button>
-
-                <div className="text-center text-sm">
-                  Não recebeu o código?{' '}
-                  <Button variant="link" className="p-0 h-auto text-sm">
-                    Reenviar código
-                  </Button>
-                </div>
 
                 <div className="text-center text-sm">
                   Lembrou sua senha?{' '}

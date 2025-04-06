@@ -5,6 +5,7 @@ import { Dashboard } from '@/modules/admin/pages/dashboard/dashboard';
 import { ConfirmEmailResend } from '@/modules/auth/pages/confirm-email-resend/confirm-email-resend';
 import { ConfirmEmail } from '@/modules/auth/pages/confirm-email/confirm-email';
 import { ForgotPassword } from '@/modules/auth/pages/forgot-password/forgot-password';
+import { ResetPassword } from '@/modules/auth/pages/reset-password/reset-password';
 import { SignIn } from '@/modules/auth/pages/sign-in/sign-in';
 import { SignUp } from '@/modules/auth/pages/sign-up/sign-up';
 import { Error404 } from '@/modules/errors/error-404/error-404';
@@ -38,6 +39,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/confirm" element={<ConfirmEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/confirm-email" element={<ConfirmEmail />} />
           <Route
             path="/confirm-email-resend"
