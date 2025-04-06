@@ -5,10 +5,10 @@ import './App.css';
 import { AppRoutes } from './app/routes/router';
 import { AuthProvider } from './core/context/auth-context';
 
-function App() {
+export function App() {
   return (
     <Router>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
@@ -17,5 +17,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;
