@@ -11,6 +11,7 @@ import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
 import { cn } from '@/core/lib/utils';
 import { ConfirmEmailService } from '@/core/services/cognito/confirm-email.service';
+import { VerificationCodeInput } from '@/shared/components/verification-code/verification-code';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -52,13 +53,15 @@ export function ConfirmEmail({
         email: formData.email,
         confirmationCode: formData.confirmationCode,
       });
-      setIsLoading(false);
-      toast.success('Cadastro realizado com sucesso, pode fazer seu Login.');
+      toast.success('E-mail confirmado com sucesso', {
+        description: 'Agora você pode fazer login na sua conta.',
+      });
       navigate('/sign-in');
     } catch (err) {
       toast.error(err.message);
-      setIsLoading(false);
       throw Error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -116,23 +119,14 @@ export function ConfirmEmail({
                     name="confirmationCode"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <div className="flex items-center">
-                          <Label htmlFor="name">Código de confirmação</Label>
-                        </div>
+                        <Label>Código de confirmação</Label>
                         <div className="relative pb-4">
                           <FormControl>
-                            <Input
-                              {...field}
-                              maxLength={6}
-                              id="confirmationCode"
-                              type="text"
+                            <VerificationCodeInput
+                              onChange={(value) => field.onChange(value)}
+                              onBlur={field.onBlur}
+                              error={!!fieldState.error}
                               disabled={isLoading}
-                              placeholder="Digite o código de 6 dígitos"
-                              className={cn(
-                                'transition-colors',
-                                fieldState.error &&
-                                  'border-destructive focus-visible:ring-destructive'
-                              )}
                             />
                           </FormControl>
                           <FormMessage className="absolute bottom-0 left-0 text-[10px]" />
