@@ -16,7 +16,6 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
 
-// Esquema de validação com Zod
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
 });
