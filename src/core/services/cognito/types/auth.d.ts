@@ -49,6 +49,16 @@ export type CognitoForgotPasswordError = {
   name: ForgotPasswordErrorCode;
 } & CognitoError;
 
+export type CognitoResetPasswordError = {
+  name: ResetPasswordErrorCode;
+} & CognitoError;
+
+export type ResetPasswordSubmitParams = {
+  email: string;
+  code: string;
+  newPassword: string;
+};
+
 export type AuthError = {
   code: string;
   message: string;
@@ -105,6 +115,15 @@ export type ForgotPasswordErrorCode =
   | 'ForgotPasswordFailed'
   | 'UserNotFoundException'
   | 'InvalidUsername';
+
+export type ResetPasswordErrorCode =
+  | 'CodeMismatchException'
+  | 'ExpiredCodeException'
+  | 'InvalidPasswordException'
+  | 'LimitExceededException'
+  | 'UserNotFoundException'
+  | 'TooManyRequestsException'
+  | 'UnexpectedError';
 
 export interface AuthError {
   code: AuthErrorCode;
