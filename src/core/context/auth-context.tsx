@@ -59,9 +59,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email: loggerUser.email!,
         name: loggerUser.name,
       });
-    } catch (err) {
+    } catch {
       setIsAuthenticated(false);
-      handleError(err?.message);
     } finally {
       setLoading(false);
     }

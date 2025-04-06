@@ -1,6 +1,5 @@
 import { useAuth } from '@/core/context/auth-context';
 import { AuthLayout } from '@/core/layouts/AuthLayout';
-import BaseLayout from '@/core/layouts/BaseLayout';
 import { Dashboard } from '@/modules/admin/pages/dashboard/dashboard';
 import { ConfirmEmailResend } from '@/modules/auth/pages/confirm-email-resend/confirm-email-resend';
 import { ConfirmEmail } from '@/modules/auth/pages/confirm-email/confirm-email';
@@ -32,7 +31,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isPrivate }) => {
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Rotas públicas */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthLayout />}>
           <Route path="/signin" element={<SignIn />} />
@@ -47,13 +45,9 @@ const AppRoutes: React.FC = () => {
         </Route>
       </Route>
 
-      {/* Rotas privadas */}
       <Route element={<ProtectedRoute isPrivate />}>
-        <Route path="*" element={<Error404 />} />
-      </Route>
-      {/* temporariamente */}
-      <Route element={<BaseLayout />}>
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<Error404 />} />
       </Route>
     </Routes>
   );
