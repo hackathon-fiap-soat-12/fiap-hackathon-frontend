@@ -9,8 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ForgotPasswordService } from '../services/cognito/forgot-password.service';
 import { GetCurrentAuthUserService } from '../services/cognito/get-current-auth-user.service';
+import { ResetPasswordService } from '../services/cognito/reset-password.service';
 import { SignInService } from '../services/cognito/sign-in.service';
 import { SignOutService } from '../services/cognito/sign-out.service';
+import { ResetPasswordSubmitParams } from '../services/cognito/types/auth';
 
 interface User {
   name?: string;
@@ -28,7 +30,7 @@ interface AuthContextType {
   login: (userData: UserLogin) => void;
   logout: () => void;
   forgotPassword: (email: string) => void;
-  resetPassword: (email: string) => void;
+  resetPassword: (data: ResetPasswordSubmitParams) => void;
   loading: boolean;
 }
 
@@ -115,16 +117,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const resetPassword = async (data: {
-    email: string;
-    code: string;
-    password: string;
-  }): Promise<void> => {
+  const resetPassword = async (
+    data: ResetPasswordSubmitParams
+  ): Promise<void> => {
     setLoading(true);
     try {
-      await ForgotPasswordService.sendResetCode(email);
-      toast.success('Solicitação realizada', {
-        description: 'Check seu e-mail para redefinir sua senha',
+      await ResetPasswordService.confirmResetPassword(data);
+      navigate('/signin');
+      toast.success('Senha atualizada com sucesso', {
+        description: 'Você pode fazer login agora',
       });
     } catch (err) {
       handleError(err?.message);
