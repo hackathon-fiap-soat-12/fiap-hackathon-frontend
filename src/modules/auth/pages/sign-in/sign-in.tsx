@@ -94,12 +94,13 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
                       <FormItem>
                         <div className="flex items-center">
                           <Label htmlFor="password">Password</Label>
-                          <a
-                            href="#"
+
+                          <Link
+                            to="/forgot-password"
                             className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                           >
-                            Forgot your password?
-                          </a>
+                            Esqueceu sua senha?
+                          </Link>
                         </div>
                         <div className="relative pb-4">
                           <FormControl>

@@ -4,7 +4,7 @@ import BaseLayout from '@/core/layouts/BaseLayout';
 import { Dashboard } from '@/modules/admin/pages/dashboard/dashboard';
 import { ConfirmEmailResend } from '@/modules/auth/pages/confirm-email-resend/confirm-email-resend';
 import { ConfirmEmail } from '@/modules/auth/pages/confirm-email/confirm-email';
-import { ForgotPassword } from '@/modules/auth/pages/reset-password/forgot-password';
+import { ForgotPassword } from '@/modules/auth/pages/forgot-password/forgot-password';
 import { SignIn } from '@/modules/auth/pages/sign-in/sign-in';
 import { SignUp } from '@/modules/auth/pages/sign-up/sign-up';
 import { Error404 } from '@/modules/errors/error-404/error-404';
