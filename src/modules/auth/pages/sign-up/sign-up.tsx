@@ -71,7 +71,7 @@ export function SignUp({ className, ...props }: React.ComponentProps<'div'>) {
       });
       setIsLoading(false);
       toast.success('Cadastro realizado com sucesso, verifique seu e-mail.');
-      navigate('/confirm-passowrd');
+      navigate('/confirm-email');
     } catch (err) {
       setIsLoading(false);
       toast.error(err.message);
