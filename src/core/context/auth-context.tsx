@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { ForgotPasswordService } from '../services/cognito/forgot-password.service';
 import { GetCurrentAuthUserService } from '../services/cognito/get-current-auth-user.service';
 import { SignInService } from '../services/cognito/sign-in.service';
 import { SignOutService } from '../services/cognito/sign-out.service';
@@ -26,6 +27,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (userData: UserLogin) => void;
   logout: () => void;
+  forgotPassword: (email: string) => void;
   loading: boolean;
 }
 
@@ -98,6 +100,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const forgotPassword = async (email: string): Promise<void> => {
+    setLoading(true);
+    try {
+      await ForgotPasswordService.sendResetCode(email);
+      toast.success('Solicitação realizada', {
+        description: 'Check seu e-mail para redefinir sua senha',
+      });
+    } catch (err) {
+      handleError(err?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleError = (message: string) => {
     toast.error('Oops, algo deu errado', {
       description: message,
@@ -112,6 +128,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         login,
         logout,
         loading,
+        forgotPassword,
       }}
     >
       {children}
