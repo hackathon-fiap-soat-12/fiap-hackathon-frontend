@@ -49,6 +49,7 @@ export const VerificationCodeInput = forwardRef<
       const newCode = pasteDigits.split('');
       setCode(newCode);
       inputsRef.current[length - 1]?.focus();
+      onChange?.(newCode.join(''));
     }
   };
 
