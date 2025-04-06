@@ -1,9 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
-import { configureAmplify } from './app/config/aws-amplify.config';
 import { ConfigureAwsAmplifyError } from './errors/aws-amplify-config.error';
 import './index.css';
+import { configureAmplify } from './infra/config/aws-amplify.config';
 
 try {
   configureAmplify({
