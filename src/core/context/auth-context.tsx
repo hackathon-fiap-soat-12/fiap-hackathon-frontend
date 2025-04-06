@@ -28,6 +28,7 @@ interface AuthContextType {
   login: (userData: UserLogin) => void;
   logout: () => void;
   forgotPassword: (email: string) => void;
+  resetPassword: (email: string) => void;
   loading: boolean;
 }
 
@@ -114,6 +115,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const resetPassword = async (data: {
+    email: string;
+    code: string;
+    password: string;
+  }): Promise<void> => {
+    setLoading(true);
+    try {
+      await ForgotPasswordService.sendResetCode(email);
+      toast.success('Solicitação realizada', {
+        description: 'Check seu e-mail para redefinir sua senha',
+      });
+    } catch (err) {
+      handleError(err?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleError = (message: string) => {
     toast.error('Oops, algo deu errado', {
       description: message,
@@ -129,6 +148,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         logout,
         loading,
         forgotPassword,
+        resetPassword,
       }}
     >
       {children}
