@@ -26,14 +26,14 @@ export function ForgotPassword({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const { loading } = useAuth();
+  const { loading, forgotPassword } = useAuth();
 
   const form = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  function onSubmit(data: unknown) {
-    console.log('Login data:', data);
+  function onSubmit(data: ForgotPasswordFormData) {
+    forgotPassword(data.email);
   }
 
   return (
@@ -47,9 +47,9 @@ export function ForgotPassword({
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
+                  <h1 className="text-2xl font-bold">Esqueceu sua senha?</h1>
                   <p className="text-balance text-muted-foreground">
-                    Acesse sua conta para continuar
+                    Solicite um código de recuperação
                   </p>
                 </div>
                 <div className="grid gap-2">
@@ -83,8 +83,8 @@ export function ForgotPassword({
                     )}
                   />
                 </div>
-                <Button type="submit" className="w-full">
-                  Enviar
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Solicitando...' : 'Solicitar'}
                 </Button>
                 <div className="text-center text-sm">
                   Ainda não tem uma conta?{' '}
