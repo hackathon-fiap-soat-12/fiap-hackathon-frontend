@@ -108,8 +108,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await ForgotPasswordService.sendResetCode(email);
       toast.success('Solicitação realizada', {
-        description: 'Check seu e-mail para redefinir sua senha',
+        description: 'Verifique seu e-mail para redefinir sua senha',
       });
+      navigate('/reset-password');
     } catch (err) {
       handleError(err?.message);
     } finally {
