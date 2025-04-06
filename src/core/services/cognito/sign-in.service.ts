@@ -10,7 +10,14 @@ import {
 export class SignInService {
   static async signIn(params: LoginParams): Promise<Partial<AuthUser>> {
     try {
-      await signIn(params);
+      const { isSignedIn } = await signIn(params);
+
+      if (!isSignedIn) {
+        throw {
+          name: 'UserNotConfirmedException',
+        } as CognitoSignInError;
+      }
+
       return GetCurrentAuthUserService.getCurrentAuthUser();
     } catch (error) {
       const authError = error as CognitoSignInError;
