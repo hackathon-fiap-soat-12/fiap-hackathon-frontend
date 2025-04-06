@@ -143,7 +143,7 @@ export function ConfirmEmail({
                 <div className="text-center text-sm">
                   Não recebeu o código?
                   <Link
-                    to="/confirm-resend"
+                    to="/confirm-email-resend"
                     className="underline underline-offset-4"
                   >
                     {` Solicitar novo código`}
