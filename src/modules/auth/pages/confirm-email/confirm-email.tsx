@@ -76,41 +76,10 @@ export function ConfirmEmail({
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold">Verificação de Email</h1>
+                  <h1 className="text-2xl font-bold">Verificação de E-mail</h1>
                   <p className="text-balance text-muted-foreground">
-                    Digite o código de 6 dígitos enviado para o seu email
+                    Digite o código de 6 dígitos enviado para o seu e-mail
                   </p>
-                </div>
-
-                <div className="grid gap-2">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field, fieldState }) => (
-                      <FormItem>
-                        <div className="flex items-center">
-                          <Label htmlFor="email">E-mail</Label>
-                        </div>
-                        <div className="relative pb-4">
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="email"
-                              type="email"
-                              disabled={isLoading}
-                              placeholder="seuemail@exemplo.com"
-                              className={cn(
-                                'transition-colors',
-                                fieldState.error &&
-                                  'border-destructive focus-visible:ring-destructive'
-                              )}
-                            />
-                          </FormControl>
-                          <FormMessage className="absolute bottom-0 left-0 text-[10px]" />
-                        </div>
-                      </FormItem>
-                    )}
-                  />
                 </div>
 
                 <div className="grid gap-2">
@@ -127,6 +96,37 @@ export function ConfirmEmail({
                               onBlur={field.onBlur}
                               error={!!fieldState.error}
                               disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage className="absolute bottom-0 left-0 text-[10px]" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field, fieldState }) => (
+                      <FormItem>
+                        <div className="flex items-center">
+                          <Label htmlFor="email">Confirme seu E-mail</Label>
+                        </div>
+                        <div className="relative pb-4">
+                          <FormControl>
+                            <Input
+                              {...field}
+                              id="email"
+                              type="email"
+                              disabled={isLoading}
+                              placeholder="seuemail@exemplo.com"
+                              className={cn(
+                                'transition-colors',
+                                fieldState.error &&
+                                  'border-destructive focus-visible:ring-destructive'
+                              )}
                             />
                           </FormControl>
                           <FormMessage className="absolute bottom-0 left-0 text-[10px]" />
