@@ -67,7 +67,7 @@ export function ConfirmEmailResend({
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Reenviar Verificação</h1>
                   <p className="text-balance text-muted-foreground">
-                    Insira seu email para receber um novo link de verificação
+                    Insira seu e-mail para receber um novo link de verificação
                   </p>
                 </div>
 
@@ -109,7 +109,7 @@ export function ConfirmEmailResend({
                 </Button>
 
                 <div className="text-center text-sm">
-                  Já verificou seu email?
+                  Já verificou seu e-mail?
                   <Link to="/sign-in" className="underline underline-offset-4">
                     {` Faça login`}
                   </Link>
