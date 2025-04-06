@@ -1,104 +1,79 @@
 import i18n from '@/i18n/i18n';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import axios, {
   AxiosError,
   AxiosInstance,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { isAfter } from 'date-fns';
-import {
-  JSXElementConstructor,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-} from 'react';
 import { toast } from 'sonner';
 
-const BASE_URL = '';
-
-axios.defaults.headers.common['Content-Type'] = 'application/json';
-axios.defaults.headers.common['Accept'] = 'application/json';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    Accept: 'application/json',
   },
 });
 
-interface Session {
-  expires_in: string | number | Date;
-  token: string;
-}
-
-interface UserData {
-  session: Session;
-}
-
+// Interceptor para adicionar o token de autenticação
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const user = localStorage.getItem('user');
+  async (config: InternalAxiosRequestConfig) => {
+    try {
+      const { tokens } = await fetchAuthSession();
+      const accessToken = tokens?.accessToken?.toString();
 
-    if (user) {
-      const { session } = JSON.parse(user) as UserData;
-
-      if (isAfter(new Date(), new Date(session.expires_in))) {
-        return Promise.reject('Token expired');
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
 
-      config.headers.Authorization = `Bearer ${session.token}`;
+      return config;
+    } catch {
+      // Não interrompe a requisição se houver erro ao obter o token
+      // (permite chamadas públicas)
+      return config;
     }
-
-    return config;
   },
   (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
 
+// Interceptor de respostas
 api.interceptors.response.use(
-  (response: any) => response,
-  (error: {
-    code: string;
-    response: {
-      status: number;
-      data: {
-        message:
-          | string
-          | number
-          | bigint
-          | boolean
-          | (() => React.ReactNode)
-          | ReactElement<unknown, string | JSXElementConstructor<any>>
-          | Iterable<ReactNode>
-          | ReactPortal
-          | Promise<
-              | string
-              | number
-              | bigint
-              | boolean
-              | ReactPortal
-              | ReactElement<unknown, string | JSXElementConstructor<any>>
-              | Iterable<ReactNode>
-              | null
-              | undefined
-            >
-          | null
-          | undefined;
-      };
-    };
-  }) => {
-    if (error.code === 'ERR_NETWORK') {
-      toast.error(i18n.t('network_error', { ns: 'errors' }));
-    }
-
-    if (error?.response?.status === 409) {
+  (response) => response,
+  async (error: AxiosError) => {
+    if (!axios.isAxiosError(error)) {
+      toast.error(i18n.t('unknown_error', { ns: 'errors' }));
       return Promise.reject(error);
     }
 
-    if (error?.response?.status !== 200 && error?.response?.data?.message) {
-      toast.error(error?.response?.data?.message);
+    // Tratamento de erro de conexão
+    if (error.code === 'ERR_NETWORK') {
+      toast.error(i18n.t('network_error', { ns: 'errors' }));
+      return Promise.reject(error);
+    }
+
+    const status = error.response?.status;
+    const data = error.response?.data as { message?: string };
+
+    if (status === 401) {
+      toast.error('Oops, algo deu errado', {
+        description: i18n.t('session_expired', { ns: 'errors' }),
+      });
+      window.location.href = '/signin';
+    }
+
+    if (status === 403) {
+      toast.error('Oops, algo deu errado', {
+        description: i18n.t('access_denied', { ns: 'errors' }),
+      });
+    }
+
+    if (status && status >= 400 && data?.message) {
+      toast.error('Oops, algo deu errado', { description: data.message });
     }
 
     return Promise.reject(error);
