@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isPrivate }) => {
   }
 
   if (!isPrivate && isAuthenticated) {
-    return <Navigate to="/admin/dashboard" replace />;
+    return <Navigate to="/admin/home" replace />;
   }
 
   return <Outlet />;

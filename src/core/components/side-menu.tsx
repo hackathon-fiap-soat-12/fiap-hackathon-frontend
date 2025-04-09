@@ -25,7 +25,7 @@ function SideMenu() {
           <div className="h-[1px] bg-indigo-400/30 mb-4" />
           <div className="p-3 flex flex-col gap-2">
             <SideMenuItem
-              name="Dashboard"
+              name="Home"
               path="/admin/home"
               icon={LayoutPanelLeft}
             />
