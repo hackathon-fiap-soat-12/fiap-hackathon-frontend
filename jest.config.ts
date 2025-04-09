@@ -33,7 +33,7 @@ const config: Config = {
     '!src/**/__mocks__/**',
     '!src/**/__tests__/**',
   ],
-
+  setupFiles: ['<rootDir>/jest.polyfill.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
@@ -45,6 +45,8 @@ const config: Config = {
       lines: 70,
     },
   },
+  silent: true,
+  bail: 1,
 };
 
 export default config;
