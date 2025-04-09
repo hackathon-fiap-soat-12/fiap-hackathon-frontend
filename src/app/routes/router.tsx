@@ -1,5 +1,6 @@
 import { useAuth } from '@/core/context/auth-context';
 import { AuthLayout } from '@/core/layouts/AuthLayout';
+import BaseLayout from '@/core/layouts/BaseLayout';
 import { Dashboard } from '@/modules/admin/pages/dashboard/dashboard';
 import { ConfirmEmailResend } from '@/modules/auth/pages/confirm-email-resend/confirm-email-resend';
 import { ConfirmEmail } from '@/modules/auth/pages/confirm-email/confirm-email';
@@ -46,7 +47,9 @@ const AppRoutes: React.FC = () => {
       </Route>
 
       <Route element={<ProtectedRoute isPrivate />}>
-        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route element={<BaseLayout />}>
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+        </Route>
         <Route path="*" element={<Error404 />} />
       </Route>
     </Routes>

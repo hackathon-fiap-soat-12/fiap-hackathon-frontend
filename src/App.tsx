@@ -8,7 +8,7 @@ import { AuthProvider } from './core/context/auth-context';
 export function App() {
   return (
     <Router>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
