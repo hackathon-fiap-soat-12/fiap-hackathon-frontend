@@ -5,7 +5,11 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "jsx": "react-jsx",
     "baseUrl": ".",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
     "paths": {
       "@/shared/*": ["./src/shared/*"],
@@ -14,6 +18,8 @@
       "@/app/*": ["./src/app/*"],
       "@/assets/*": ["./src/assets/*"],
       "@/i18n/*": ["./src/infra/i18n/*"]
-    }
+    },
+    "types": ["jest", "@testing-library/jest-dom", "node", "vite/client"],
+    "lib": ["es2020", "dom"]
   }
 }
