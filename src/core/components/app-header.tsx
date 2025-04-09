@@ -36,7 +36,9 @@ const AppHeader = () => {
             </div>
 
             <div className="flex flex-col">
-              <span className="text-sm font-medium">{user?.name}</span>
+              <span className="text-sm text-muted-foreground font-medium">
+                {user?.name}
+              </span>
               <span className="text-xs text-muted-foreground">
                 {user?.email || 'Usuário'}
               </span>
