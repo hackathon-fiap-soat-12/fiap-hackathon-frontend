@@ -15,9 +15,9 @@
       "@/shared/*": ["./src/shared/*"],
       "@/modules/*": ["./src/modules/*"],
       "@/core/*": ["./src/core/*"],
+      "@/infra/*": ["./src/infra/*"],
       "@/app/*": ["./src/app/*"],
-      "@/assets/*": ["./src/assets/*"],
-      "@/i18n/*": ["./src/infra/i18n/*"]
+      "@/assets/*": ["./src/assets/*"]
     },
     "types": ["jest", "@testing-library/jest-dom", "node", "vite/client"],
     "lib": ["es2020", "dom"]
