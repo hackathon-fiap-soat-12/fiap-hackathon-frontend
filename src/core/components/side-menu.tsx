@@ -18,8 +18,15 @@ function SideMenu() {
       <SidebarContent>
         <SidebarMenu>
           <div className="flex items-center justify-center gap-2 p-4 mb-4 rounded-md">
-            <span className="font-bold text-xl bg-gradient-to-r from-indigo-800 to-purple-800 text-transparent bg-clip-text">
-              TDAH App
+            <img
+              src="/icon-alq-frame.svg"
+              alt="Logo Alquimia Frames"
+              width={50}
+              height={50}
+              className="rounded-full"
+            />
+            <span className="font-bold text-xl bg-gradient-to-r from-indigo-800 to-purple-800 text-transparent bg-clip-text group-data-[collapsible=icon]:hidden">
+              Alq. Frames
             </span>
           </div>
           <div className="h-[1px] bg-indigo-400/30 mb-4" />

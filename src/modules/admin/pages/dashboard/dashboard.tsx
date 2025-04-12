@@ -1,4 +1,5 @@
 import {
+  Column,
   DataTable,
   DataTableBody,
   DataTableCell,
@@ -7,67 +8,95 @@ import {
 } from '@/core/components/data-table';
 import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
-import { DownloadIcon } from 'lucide-react';
-import { useState } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/core/components/ui/select';
+import { getProcessedVideoList } from '@/core/services/video/get-processed-video-list.service';
+import { DownloadIcon, SearchIcon, SparklesIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const columns: Column[] = [
+  { header: 'Nome do Vídeo', accessorKey: 'videoName', sortable: true },
+  {
+    header: 'Frames',
+    accessorKey: 'qtdFrames',
+    sortable: true,
+    align: 'center',
+  },
+  {
+    header: 'Tamanho',
+    accessorKey: 'sizeInBytes',
+    sortable: true,
+    align: 'center',
+  },
+  {
+    header: 'Status',
+    accessorKey: 'processingStatus',
+    sortable: true,
+    align: 'center',
+  },
+  { header: 'Ações', accessorKey: 'acoes', sortable: false, align: 'center' },
+];
 
 export function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [videos, setVideos] = useState<
+    {
+      id: string;
+      videoName: string;
+      processingStatus: string;
+      qtdFrames: number;
+      sizeInBytes: number;
+    }[]
+  >([]);
+  const navigate = useNavigate();
+  const [pageSize, setPageSize] = useState(20);
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const mockProcessedVideos = [
-    {
-      id: 'vid-001',
-      nome: 'Reunião de equipe',
-      dataProcessamento: '2023-11-10',
-      status: 'Concluído',
-      quantidadeFrames: 256,
-      tamanhoArquivo: '15.2 MB',
-    },
-    {
-      id: 'vid-002',
-      nome: 'Apresentação do projeto',
-      dataProcessamento: '2023-11-07',
-      status: 'Processando',
-      quantidadeFrames: 128,
-      tamanhoArquivo: '8.7 MB',
-    },
-    {
-      id: 'vid-003',
-      nome: 'Workshop de inovação',
-      dataProcessamento: '2023-11-05',
-      status: 'Falhou',
-      quantidadeFrames: 312,
-      tamanhoArquivo: '22.4 MB',
-    },
-    {
-      id: 'vid-004',
-      nome: 'Treinamento de produto',
-      dataProcessamento: '2023-10-28',
-      status: 'Concluído',
-      quantidadeFrames: 204,
-      tamanhoArquivo: '17.9 MB',
-    },
-    {
-      id: 'vid-005',
-      nome: 'Entrevista cliente',
-      dataProcessamento: '2023-10-20',
-      status: 'Concluído',
-      quantidadeFrames: 89,
-      tamanhoArquivo: '6.3 MB',
-    },
-  ];
+  const processingStatusTexts = (status: string): string => {
+    const statusTexts: { [key: string]: string } = {
+      PROCESSED: 'Processado',
+      PROCESSING: 'Processando',
+      FAILED: 'Falhou',
+    };
 
-  const filteredVideos = mockProcessedVideos.filter((video) =>
-    video.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    return statusTexts[status] || 'Desconhecido';
+  };
+
+  const fetchVideos = async (reset = false) => {
+    setLoading(true);
+    try {
+      const response = await getProcessedVideoList(
+        pageSize,
+        reset ? undefined : lastEvaluatedKey || undefined
+      );
+      setVideos(reset ? response.files : [...videos, ...response.files]);
+      setLastEvaluatedKey(response.lastEvaluatedKey);
+    } catch (error) {
+      console.error('Erro ao buscar vídeos processados:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideos(true);
+  }, [pageSize]);
+
+  const filteredVideos = videos.filter((video) =>
+    video.videoName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const columns = [
-    { header: 'Nome do Vídeo', accessorKey: 'nome' },
-    { header: 'Data de Processamento', accessorKey: 'dataProcessamento' },
-    { header: 'Frames Extraídos', accessorKey: 'quantidadeFrames' },
-    { header: 'Tamanho do Arquivo', accessorKey: 'tamanhoArquivo' },
-    { header: 'Status', accessorKey: 'status' },
-    { header: 'Ações', accessorKey: 'acoes' },
-  ];
+  const formatSize = (sizeInBytes: number) => {
+    const mb = sizeInBytes / (1024 * 1024);
+    return `${mb.toFixed(2)} MB`;
+  };
 
   const handleDownload = (videoId: string, videoName: string) => {
     console.log(`Iniciando download do arquivo ${videoId} - ${videoName}`);
@@ -78,108 +107,199 @@ export function Dashboard() {
     setSearchTerm(search);
   };
 
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+  };
+
   return (
-    <div className="flex flex-col w-full min-h-screen text-white">
-      <div className="w-full h-full p-4 md:p-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-6 text-start">
-          Histórico de Processamento
-        </h1>
-        <div className="rounded-lg shadow-lg bg-gradient-to-b from-slate-800 to-slate-900 p-4 md:p-6">
-          <div className="mb-4 md:mb-6">
-            <input
-              type="text"
-              placeholder="🔍 Filtrar por nome do vídeo..."
-              value={searchTerm}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full p-2 md:p-3 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+    <main className="flex w-full h-full flex-col items-center p-4 md:p-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen">
+      <div className="w-full max-w-7xl space-y-6">
+        {/* Header inspirado na Home */}
+        <div className="space-y-2 animate-fade-in">
+          <div className="inline-flex items-center gap-3 justify-center w-full">
+            <div className="h-1 w-8 bg-indigo-500 rounded-full"></div>
+            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-400 tracking-tight">
+              Alquimia de Frames
+            </h1>
+            <div className="h-1 w-8 bg-purple-500 rounded-full"></div>
           </div>
-          <div className="overflow-x-auto">
-            <DataTable className="min-w-full">
-              <DataTableHeader
-                columns={columns}
-                className="text-white font-semibold bg-slate-900"
+
+          <p className="text-lg text-gray-300 font-light text-center">
+            Seu histórico de transformações mágicas
+          </p>
+
+          <div className="py-2 text-gray-400">
+            <p className="flex items-center justify-center gap-3">
+              <span className="text-indigo-400 animate-pulse">✧</span>
+              "Cada frame conta uma história"
+              <span className="text-purple-400 animate-pulse">✧</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Container principal com efeito de brilho */}
+        <div className="relative group transition-all duration-300">
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 via-indigo-600/30 to-purple-600/30 rounded-xl blur-lg opacity-70 group-hover:opacity-90 transition duration-500"></div>
+          <div className="relative rounded-xl bg-gray-800/70 backdrop-blur-sm p-6 ring-1 ring-gray-700/50 border border-gray-700/30 overflow-hidden">
+            {/* Barra de pesquisa */}
+            <div className="mb-6 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <SearchIcon className="h-5 w-5 text-indigo-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Buscar vídeos processados..."
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-gray-700/50 border border-gray-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
-              <DataTableBody>
-                {filteredVideos.length > 0 ? (
-                  filteredVideos.map((video) => (
-                    <DataTableRow
-                      key={video.id}
-                      className="hover:bg-slate-700 border-slate-600"
-                    >
-                      <DataTableCell className="w-full text-left">
-                        {video.nome}
-                      </DataTableCell>
-                      <DataTableCell className="text-center">
-                        {video.dataProcessamento}
-                      </DataTableCell>
-                      <DataTableCell className="text-center">
-                        {video.quantidadeFrames}
-                      </DataTableCell>
-                      <DataTableCell className="text-center">
-                        {video.tamanhoArquivo}
-                      </DataTableCell>
-                      <DataTableCell className="text-center">
-                        <Badge
-                          className={`px-1 py-0 rounded-full text-[10px] font-semibold ${
-                            video.status === 'Concluído'
-                              ? 'bg-green-500 text-white'
-                              : video.status === 'Processando'
-                                ? 'bg-yellow-500 text-black'
-                                : 'bg-red-500 text-white'
-                          }`}
-                        >
-                          {video.status}
-                        </Badge>
-                      </DataTableCell>
-                      <DataTableCell className="text-center">
-                        <div className="flex justify-center">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="rounded-full hover:bg-primary hover:text-white transition"
-                            onClick={() => handleDownload(video.id, video.nome)}
+            </div>
+
+            {/* Tabela de dados */}
+            <div className="overflow-x-auto">
+              <DataTable className="min-w-full">
+                <DataTableHeader
+                  columns={columns}
+                  className="text-white font-semibold bg-gradient-to-r from-indigo-900/50 to-purple-900/50"
+                />
+                <DataTableBody>
+                  {filteredVideos.length > 0 ? (
+                    filteredVideos.map((video) => (
+                      <DataTableRow
+                        key={video.id}
+                        className="hover:bg-gray-700/50 border-gray-700/50 transition-colors"
+                      >
+                        <DataTableCell className="text-left">
+                          <div className="flex items-center gap-2">
+                            <SparklesIcon className="h-4 w-4 text-purple-400" />
+                            <span>{video.videoName}</span>
+                          </div>
+                        </DataTableCell>
+                        <DataTableCell className="text-center">
+                          <Badge
+                            variant="outline"
+                            className="bg-indigo-900/20 text-indigo-300 border-indigo-700"
                           >
-                            <DownloadIcon className="w-5 h-5" />
-                          </Button>
+                            {video.qtdFrames}
+                          </Badge>
+                        </DataTableCell>
+                        <DataTableCell className="text-gray-300">
+                          {formatSize(video.sizeInBytes)}
+                        </DataTableCell>
+                        <DataTableCell className="text-center">
+                          <Badge
+                            className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                              video.processingStatus === 'PROCESSED'
+                                ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                                : video.processingStatus === 'PROCESSING'
+                                  ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30 animate-pulse'
+                                  : 'bg-red-500/20 text-red-300 border-red-500/30'
+                            }`}
+                          >
+                            {processingStatusTexts(video.processingStatus)}
+                          </Badge>
+                        </DataTableCell>
+                        <DataTableCell className="text-center">
+                          <div className="flex justify-center">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={video.processingStatus !== 'PROCESSED'}
+                              className="rounded-full bg-indigo-900/30 hover:bg-indigo-700/50 border-indigo-700/50 text-indigo-300 hover:text-white transition-all"
+                              onClick={() =>
+                                handleDownload(video.id, video.videoName)
+                              }
+                            >
+                              <DownloadIcon className="w-4 h-4 mr-2" />
+                              Baixar
+                            </Button>
+                          </div>
+                        </DataTableCell>
+                      </DataTableRow>
+                    ))
+                  ) : (
+                    <DataTableRow className="border-gray-700/50">
+                      <DataTableCell colSpan={7} className="text-center py-12">
+                        <div className="flex flex-col items-center justify-center space-y-4">
+                          <div className="p-4 bg-gray-800/50 rounded-full border border-gray-700/30">
+                            <SparklesIcon className="h-10 w-10 text-gray-500 animate-pulse" />
+                          </div>
+                          <span className="text-lg font-medium text-gray-400">
+                            Nenhuma transformação encontrada
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {searchTerm
+                              ? 'Ajuste sua busca ou tente novamente'
+                              : 'Faça upload de um vídeo para começar'}
+                          </span>
+                          {!searchTerm && (
+                            <Button
+                              variant="outline"
+                              className="mt-2 bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border-indigo-700/30 text-indigo-300 hover:text-white hover:border-indigo-500/50"
+                              onClick={() => {
+                                navigate('/admin/home');
+                              }}
+                            >
+                              Criar Nova Transformação
+                            </Button>
+                          )}
                         </div>
                       </DataTableCell>
                     </DataTableRow>
-                  ))
-                ) : (
-                  <DataTableRow className="border-slate-600">
-                    <DataTableCell colSpan={6} className="text-center py-8">
-                      <div className="flex flex-col items-center justify-center">
-                        <svg
-                          className="h-12 w-12 text-slate-500 mb-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        <span className="text-lg font-medium text-slate-400">
-                          Nenhum vídeo encontrado
-                        </span>
-                        <span className="text-sm text-slate-500 mt-1">
-                          {searchTerm
-                            ? 'Tente ajustar os filtros de busca'
-                            : 'Ainda não há vídeos processados disponíveis'}
-                        </span>
-                      </div>
-                    </DataTableCell>
-                  </DataTableRow>
-                )}
-              </DataTableBody>
-            </DataTable>
+                  )}
+                </DataTableBody>
+              </DataTable>
+            </div>
+
+            {/* Seleção de pageSize */}
+            <div className="mt-6 flex items-center justify-end">
+              <Select
+                value={pageSize.toString()}
+                onValueChange={(value) => handlePageSizeChange(Number(value))}
+              >
+                <SelectTrigger className="w-[180px] bg-gray-700/50 border border-gray-600/30 text-white focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+                  <SelectValue placeholder="Itens por página" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 border border-gray-700/50">
+                  {[10, 20, 50, 100].map((size) => (
+                    <SelectItem
+                      key={size}
+                      value={size.toString()}
+                      className="hover:bg-gray-700/50 focus:bg-gray-700/50"
+                    >
+                      {size} itens por página
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Botão de carregar mais */}
+            {lastEvaluatedKey && (
+              <div className="mt-6 flex justify-center">
+                <Button
+                  variant="outline"
+                  className="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border-indigo-700/30 text-indigo-300 hover:text-white hover:border-indigo-500/50"
+                  onClick={() => fetchVideos()}
+                  disabled={loading}
+                >
+                  {loading ? 'Carregando...' : 'Carregar mais'}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Rodapé */}
+        <div className="text-center space-y-1">
+          <p className="text-xs text-gray-600">
+            "Nós preservamos cada detalhe do seu conteúdo com cuidado alquímico"
+          </p>
+          <p className="text-xs text-gray-700">
+            {filteredVideos.length} itens encontrados • Última atualização: hoje
+          </p>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,4 +1,8 @@
 {
   "network": "Erro de rede",
-  "404": "Página não encontrada"
+  "404": "Página não encontrada",
+  "unknown_error": "Erro desconhecido",
+  "oops": "Oops, algo deu errado",
+  "session_expired": "Sua sessão expirou. Por favor, faça login novamente.",
+  "access_denied": "Acesso negado. Você não tem permissão para acessar este recurso."
 }

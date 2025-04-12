@@ -52,7 +52,7 @@ api.interceptors.response.use(
 
     // Tratamento de erro de conexão
     if (error.code === 'ERR_NETWORK') {
-      toast.error(i18n.t('network_error', { ns: 'errors' }));
+      toast.error(i18n.t('network', { ns: 'errors' })); // Alterado para usar a tradução
       return Promise.reject(error);
     }
 
@@ -60,20 +60,25 @@ api.interceptors.response.use(
     const data = error.response?.data as { message?: string };
 
     if (status === 401) {
-      toast.error('Oops, algo deu errado', {
+      toast.error(i18n.t('oops', { ns: 'errors' }), {
         description: i18n.t('session_expired', { ns: 'errors' }),
       });
       window.location.href = '/signin';
+      return Promise.reject(error);
     }
 
     if (status === 403) {
-      toast.error('Oops, algo deu errado', {
+      toast.error(i18n.t('oops', { ns: 'errors' }), {
         description: i18n.t('access_denied', { ns: 'errors' }),
       });
+      return Promise.reject(error);
     }
 
     if (status && status >= 400 && data?.message) {
-      toast.error('Oops, algo deu errado', { description: data.message });
+      toast.error(i18n.t('oops', { ns: 'errors' }), {
+        description: data.message,
+      });
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);
