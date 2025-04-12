@@ -1,4 +1,3 @@
-import i18n from '@/i18n/i18n';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import axios, {
   AxiosError,
@@ -6,6 +5,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { toast } from 'sonner';
+import i18n from '../i18n/i18n';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -23,7 +23,7 @@ api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
       const { tokens } = await fetchAuthSession();
-      const accessToken = tokens?.accessToken?.toString();
+      const accessToken = tokens?.idToken?.toString();
 
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
