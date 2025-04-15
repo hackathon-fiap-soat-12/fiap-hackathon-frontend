@@ -25,6 +25,12 @@ on:
         default: ''
         type: string
 
+      VITE_API_BASE_URL:
+        description: '⚙️ Base API URL Gateway'
+        required: true
+        default: 'https://GATEWAY-HASH.execute-api.us-east-1.amazonaws.com/hackathon/v1'
+        type: string
+
 jobs:
   deploy:
     name: Build e Deploy para VERCEL
@@ -83,12 +89,3 @@ jobs:
       - name: ✅ Finalizado com Sucesso!
         run: |
           echo "🚀 Deploy concluído com sucesso! 🎉"
-
-      - name: Atualizar Descrição do Repositório no GitHub
-        run: |
-          REPO_NAME=${{ github.repository }}
-          echo "📝 Atualizando descrição do repositório para incluir a URL do deploy..."
-          curl -X PATCH -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/$REPO_NAME \
-               -d "{\"description\": \"🚀 Deploy disponível em: ${{ env.DEPLOY_URL }}\"}"
