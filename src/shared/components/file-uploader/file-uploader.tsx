@@ -6,7 +6,11 @@ import { Upload, X } from 'lucide-react';
 import type React from 'react';
 import { useRef, useState } from 'react';
 
-export function FileUploader() {
+interface FileUploaderProps {
+  onFilesChange?: (files: File[]) => void;
+}
+
+export function FileUploader({ onFilesChange }: FileUploaderProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
@@ -15,6 +19,10 @@ export function FileUploader() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFiles(Array.from(e.target.files));
+    }
+
+    if (onFilesChange) {
+      onFilesChange(e.target.files ? Array.from(e.target.files) : []);
     }
   };
 
