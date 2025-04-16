@@ -1,55 +1,88 @@
-# React + TypeScript + Vite - fiap-hackathon-frontend
+# Alquimia Frames - Hackathon Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é o frontend da aplicação **Alquimia Frames**, desenvolvida para o hackathon da FIAP. A aplicação transforma vídeos em frames extraordinários utilizando tecnologias modernas.
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React**: Biblioteca para construção de interfaces de usuário.
+- **TypeScript**: Superset do JavaScript que adiciona tipagem estática.
+- **Vite**: Ferramenta de build rápida e moderna.
+- **TailwindCSS**: Framework CSS utilitário para estilização.
+- **Radix UI**: Componentes acessíveis e estilizados.
+- **Lucide Icons**: Conjunto de ícones modernos e personalizáveis.
+- **i18next**: Internacionalização e suporte a múltiplos idiomas.
+- **AWS Amplify**: Configuração de autenticação e integração com serviços AWS.
+- **Jest** e **Testing Library**: Testes unitários e de integração.
+- **ESLint**: Linter para manter a qualidade do código.
+- **Commitlint**: Validação de mensagens de commit.
 
-## Expanding the ESLint configuration
+## Deployment
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **O deploy da aplicação está sendo realizada na vercel.**
+- Link para acessar o projeto:
+  [Alquimia Frames](https://fiap-hackathon-frontend.vercel.app/signin)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Pré-requisitos
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Certifique-se de ter as seguintes ferramentas instaladas:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- [Node.js](https://nodejs.org/) (versão 16 ou superior)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+- [Git](https://git-scm.com/)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
-# fiap-hackathon-frontend
+## Como Rodar a Aplicação
+
+Siga os passos abaixo para configurar e rodar o projeto localmente:
+
+1. **Clone o repositório**:
+
+   ```bash
+   git clone https://github.com/seu-usuario/fiap-hackathon-frontend.git
+   cd fiap-hackathon-frontend
+   ```
+
+2. **Instale as dependências**:
+
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
+
+3. **Configure as variáveis de ambiente**:
+   Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+
+   ```env
+   VITE_API_BASE_URL=https://api.com
+   VITE_COGNITO_USER_POOL_ID=seu-user-pool-id
+   VITE_COGNITO_CLIENT_ID=seu-client-id
+   ```
+
+4. **Inicie o servidor de desenvolvimento**:
+
+   ```bash
+   npm run dev
+   # ou
+   yarn dev
+   ```
+
+5. **Acesse a aplicação**:
+   Abra o navegador e acesse [http://localhost:5173](http://localhost:5173).
+
+## Scripts Disponíveis
+
+- `dev`: Inicia o servidor de desenvolvimento.
+- `build`: Gera a build de produção.
+- `preview`: Visualiza a build de produção localmente.
+- `test`: Executa os testes.
+- `lint`: Verifica problemas de lint no código.
+
+## Estrutura do Projeto
+
+- **src/**: Código-fonte principal.
+  - **core/**: Componentes e layouts reutilizáveis.
+  - **modules/**: Módulos específicos da aplicação.
+  - **shared/**: Componentes e utilitários compartilhados.
+  - **infra/**: Configurações e integrações com serviços externos.
+- **public/**: Arquivos estáticos.
+- **tests/**: Testes unitários e de integração.
