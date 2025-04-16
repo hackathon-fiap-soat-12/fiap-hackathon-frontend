@@ -19,6 +19,7 @@ import { getProcessedVideoList } from '@/core/services/video/get-processed-video
 import { DownloadIcon, SearchIcon, SparklesIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Subject, switchMap, takeUntil, timer } from 'rxjs';
 
 const columns: Column[] = [
   { header: 'Nome do Vídeo', accessorKey: 'videoName', sortable: false },
@@ -42,6 +43,32 @@ const columns: Column[] = [
   },
   { header: 'Ações', accessorKey: 'acoes', sortable: false, align: 'center' },
 ];
+
+const stopPolling$ = new Subject<void>();
+
+function startPolling(
+  pageSize: number,
+  lastEvaluatedKey: string | null,
+  setVideos: React.Dispatch<React.SetStateAction<any[]>>,
+  setLastEvaluatedKey: React.Dispatch<React.SetStateAction<string | null>>
+) {
+  timer(0, 6000)
+    .pipe(
+      takeUntil(stopPolling$),
+      switchMap(() =>
+        getProcessedVideoList(pageSize, lastEvaluatedKey ?? undefined)
+      )
+    )
+    .subscribe({
+      next: (response) => {
+        setVideos((prevVideos) =>
+          response.files ? [...prevVideos, ...response.files] : prevVideos
+        );
+        setLastEvaluatedKey(response.lastEvaluatedKey);
+      },
+      error: (error) => console.error('Erro no polling:', error),
+    });
+}
 
 export function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -87,8 +114,9 @@ export function Dashboard() {
   };
 
   useEffect(() => {
-    fetchVideos(true);
-  }, [pageSize]);
+    startPolling(pageSize, lastEvaluatedKey, setVideos, setLastEvaluatedKey);
+    return () => stopPolling$.next();
+  }, [pageSize, lastEvaluatedKey]);
 
   const filteredVideos = videos.filter((video) =>
     video.videoName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -109,7 +137,9 @@ export function Dashboard() {
   };
 
   const handlePageSizeChange = (size: number) => {
+    stopPolling$.next();
     setPageSize(size);
+    startPolling(size, lastEvaluatedKey, setVideos, setLastEvaluatedKey);
   };
 
   return (
