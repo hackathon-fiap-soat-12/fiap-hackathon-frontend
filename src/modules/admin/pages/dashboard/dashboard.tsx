@@ -21,23 +21,23 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns: Column[] = [
-  { header: 'Nome do Vídeo', accessorKey: 'videoName', sortable: true },
+  { header: 'Nome do Vídeo', accessorKey: 'videoName', sortable: false },
   {
     header: 'Frames',
     accessorKey: 'qtdFrames',
-    sortable: true,
+    sortable: false,
     align: 'center',
   },
   {
     header: 'Tamanho',
     accessorKey: 'sizeInBytes',
-    sortable: true,
+    sortable: false,
     align: 'center',
   },
   {
     header: 'Status',
     accessorKey: 'processingStatus',
-    sortable: true,
+    sortable: false,
     align: 'center',
   },
   { header: 'Ações', accessorKey: 'acoes', sortable: false, align: 'center' },
@@ -61,6 +61,7 @@ export function Dashboard() {
 
   const processingStatusTexts = (status: string): string => {
     const statusTexts: { [key: string]: string } = {
+      NEW: 'Novo',
       PROCESSED: 'Processado',
       PROCESSING: 'Processando',
       FAILED: 'Falhou',
@@ -189,11 +190,13 @@ export function Dashboard() {
                         <DataTableCell className="text-center">
                           <Badge
                             className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                              video.processingStatus === 'PROCESSED'
-                                ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                                : video.processingStatus === 'PROCESSING'
-                                  ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30 animate-pulse'
-                                  : 'bg-red-500/20 text-red-300 border-red-500/30'
+                              video.processingStatus === 'NEW'
+                                ? 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                                : video.processingStatus === 'PROCESSED'
+                                  ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                                  : video.processingStatus === 'PROCESSING'
+                                    ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30 animate-pulse'
+                                    : 'bg-red-500/20 text-red-300 border-red-500/30'
                             }`}
                           >
                             {processingStatusTexts(video.processingStatus)}

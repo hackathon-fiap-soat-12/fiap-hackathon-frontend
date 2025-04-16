@@ -1,6 +1,41 @@
+import { GetPresignedUrlService } from '@/core/services/video/get-presigned-url.service';
 import { FileUploader } from '@/shared/components/file-uploader/file-uploader';
+import { toast } from 'sonner';
 
 export default function Home() {
+  const handleFileUpload = async (file: File[]) => {
+    if (!file?.length) {
+      toast.error('Nenhum arquivo selecionado');
+      return;
+    }
+
+    const { url, id } = await GetPresignedUrlService.getPresignedUrl({
+      fileName: file[0].name,
+      fileType: file[0].type,
+    });
+
+    if (!url) return;
+
+    const formData = new FormData();
+    formData.append('file', file[0]);
+
+    const options = {
+      method: 'PUT',
+      headers: {
+        'x-amz-meta-id': id,
+        'x-amz-meta-content-type': file[0].type,
+      },
+      body: file[0],
+    };
+
+    try {
+      await fetch(url, options);
+      console.log('File uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
+
   return (
     <main className="flex w-full h-full flex-col items-center justify-center p-4 md:p-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="w-full max-w-lg space-y-8">
@@ -32,13 +67,13 @@ export default function Home() {
         <div className="relative group transition-all duration-300">
           <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 via-indigo-600/30 to-purple-600/30 rounded-xl blur-lg opacity-70 group-hover:opacity-90 transition duration-500"></div>
           <div className="relative rounded-xl bg-gray-800/70 backdrop-blur-sm p-1 ring-1 ring-gray-700/50 border border-gray-700/30 overflow-hidden">
-            <FileUploader />
+            <FileUploader onFilesChange={handleFileUpload} />
           </div>
         </div>
 
         <div className="text-center space-y-2">
           <p className="text-xs text-gray-600">
-            Formatos suportados: MP4, MOV, AVI (até 500MB)
+            Formatos suportados: MP4 (até 500MB)
           </p>
           <p className="text-xs text-gray-700 italic">
             "Nós preservamos cada detalhe do seu conteúdo com cuidado"
