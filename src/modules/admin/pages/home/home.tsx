@@ -1,39 +1,38 @@
-import { GetPresignedUrlService } from '@/core/services/video/get-presigned-url.service';
+import { UploadFileService } from '@/core/services/video/upload-file.service';
 import { FileUploader } from '@/shared/components/file-uploader/file-uploader';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Home() {
-  const handleFileUpload = async (file: File[]) => {
-    if (!file?.length) {
+  const [file, setFile] = useState<File>();
+  const [progress, setProgress] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  const onError = (error: unknown) => {
+    console.error('Erro no upload:', error);
+    toast.error('❌ Falha no upload do arquivo');
+  };
+
+  const onFilesChange = (files: File[]) => {
+    if (!files?.length) {
       toast.error('Nenhum arquivo selecionado');
       return;
     }
 
-    const { url, id } = await GetPresignedUrlService.getPresignedUrl({
-      fileName: file[0].name,
-      fileType: file[0].type,
-    });
+    setFile(files[0]);
+  };
 
-    if (!url) return;
+  const handleFileUpload = async (): Promise<void> => {
+    setIsUploading(true);
+    await UploadFileService.uploadFile(file!, setProgress, onError);
+    setIsUploading(false);
+  };
 
-    const formData = new FormData();
-    formData.append('file', file[0]);
-
-    const options = {
-      method: 'PUT',
-      headers: {
-        'x-amz-meta-id': id,
-        'x-amz-meta-content-type': file[0].type,
-      },
-      body: file[0],
-    };
-
-    try {
-      await fetch(url, options);
-      console.log('File uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    }
+  const onCancel = async (): Promise<void> => {
+    await UploadFileService.cancelUpload();
+    setProgress(0);
+    toast.warning('Upload cancelado');
+    setIsUploading(false);
   };
 
   return (
@@ -67,7 +66,13 @@ export default function Home() {
         <div className="relative group transition-all duration-300">
           <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 via-indigo-600/30 to-purple-600/30 rounded-xl blur-lg opacity-70 group-hover:opacity-90 transition duration-500"></div>
           <div className="relative rounded-xl bg-gray-800/70 backdrop-blur-sm p-1 ring-1 ring-gray-700/50 border border-gray-700/30 overflow-hidden">
-            <FileUploader onFilesChange={handleFileUpload} />
+            <FileUploader
+              onFilesChange={onFilesChange}
+              onUploadClick={handleFileUpload}
+              progress={progress}
+              onCancel={onCancel}
+              isUploading={isUploading}
+            />
           </div>
         </div>
 
