@@ -15,6 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/core/components/ui/select';
+import { VideoResponseInterface } from '@/core/interfaces/video.service';
+import { DownloadFileService } from '@/core/services/video/download-file.service';
 import { getProcessedVideoList } from '@/core/services/video/get-processed-video-list.service';
 import { DownloadIcon, SearchIcon, SparklesIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -49,10 +51,10 @@ const stopPolling$ = new Subject<void>();
 function startPolling(
   pageSize: number,
   lastEvaluatedKey: string | null,
-  setVideos: React.Dispatch<React.SetStateAction<any[]>>,
+  setVideos: React.Dispatch<React.SetStateAction<VideoResponseInterface[]>>,
   setLastEvaluatedKey: React.Dispatch<React.SetStateAction<string | null>>
 ) {
-  timer(0, 6000)
+  timer(0, 10000)
     .pipe(
       takeUntil(stopPolling$),
       switchMap(() =>
@@ -61,9 +63,7 @@ function startPolling(
     )
     .subscribe({
       next: (response) => {
-        setVideos((prevVideos) =>
-          response.files ? [...prevVideos, ...response.files] : prevVideos
-        );
+        setVideos(response.files);
         setLastEvaluatedKey(response.lastEvaluatedKey);
       },
       error: (error) => console.error('Erro no polling:', error),
@@ -71,17 +71,9 @@ function startPolling(
 }
 
 export function Dashboard() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [videos, setVideos] = useState<
-    {
-      id: string;
-      videoName: string;
-      processingStatus: string;
-      qtdFrames: number;
-      sizeInBytes: number;
-    }[]
-  >([]);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [videos, setVideos] = useState<VideoResponseInterface[]>([]);
   const [pageSize, setPageSize] = useState(20);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -113,6 +105,10 @@ export function Dashboard() {
     }
   };
 
+  const downloadFile = async (fileId: string) => {
+    DownloadFileService.downloadFile(fileId);
+  };
+
   useEffect(() => {
     startPolling(pageSize, lastEvaluatedKey, setVideos, setLastEvaluatedKey);
     return () => stopPolling$.next();
@@ -127,9 +123,10 @@ export function Dashboard() {
     return `${mb.toFixed(2)} MB`;
   };
 
-  const handleDownload = (videoId: string, videoName: string) => {
-    console.log(`Iniciando download do arquivo ${videoId} - ${videoName}`);
+  const handleDownload = (fileId: string, videoName: string) => {
+    console.log(`Iniciando download do arquivo ${fileId} - ${videoName}`);
     alert(`Download do arquivo "${videoName}" iniciado.`);
+    downloadFile(fileId);
   };
 
   const handleSearch = (search: string) => {
@@ -222,7 +219,9 @@ export function Dashboard() {
                             className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                               video.processingStatus === 'NEW'
                                 ? 'bg-blue-500/20 text-blue-300 border-blue-500/30'
-                                : video.processingStatus === 'PROCESSED'
+                                : ['PROCESSED', 'PROCESSING'].includes(
+                                      video.processingStatus
+                                    )
                                   ? 'bg-green-500/20 text-green-300 border-green-500/30'
                                   : video.processingStatus === 'PROCESSING'
                                     ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30 animate-pulse'
