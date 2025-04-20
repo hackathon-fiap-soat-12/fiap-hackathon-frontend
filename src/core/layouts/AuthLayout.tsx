@@ -7,7 +7,7 @@ function AuthLayout() {
       <div className="w-full max-w-md z-10">
         <Outlet />
       </div>
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
+      <div className="absolute inset-0 bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
       <Toaster />
     </div>
   );
