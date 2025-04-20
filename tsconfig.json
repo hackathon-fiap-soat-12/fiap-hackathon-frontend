@@ -1,16 +1,15 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "baseUrl": "./",
     "paths": {
       "@/shared/*": ["./src/shared/*"],
       "@/modules/*": ["./src/modules/*"],
@@ -19,7 +18,8 @@
       "@/app/*": ["./src/app/*"],
       "@/assets/*": ["./src/assets/*"]
     },
-    "types": ["jest", "@testing-library/jest-dom", "node", "vite/client"],
+    "types": ["vite/client", "jest"],
     "lib": ["es2020", "dom"]
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }
