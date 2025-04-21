@@ -8,7 +8,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "baseUrl": "./",
-    "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
     "strict": false,
