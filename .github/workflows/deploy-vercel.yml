@@ -52,6 +52,7 @@ jobs:
         run: |
           echo "VITE_COGNITO_USER_POOL_ID=${{ inputs.VITE_COGNITO_USER_POOL_ID }}" >> .env.production
           echo "VITE_COGNITO_CLIENT_ID=${{ inputs.VITE_COGNITO_CLIENT_ID }}" >> .env.production
+          echo "VITE_API_BASE_URL=${{ inputs.VITE_API_BASE_URL }}" >> .env.production
 
       - name: 🔍 Verificar conteúdo do .env.production
         run: cat .env.production
